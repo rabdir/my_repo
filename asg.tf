@@ -17,13 +17,13 @@ resource "aws_launch_configuration" "nginx_lc" {
   }
 }
 
-resource "aws_autoscaling_group" "nginx_asg" {
+resource "aws_autoscaling_group" "nginx_asg" {   
   name                 = "nginx-asg"
   launch_configuration = aws_launch_configuration.nginx_lc.id
   vpc_zone_identifier  = [aws_subnet.public_subnet1.id, aws_subnet.public_subnet2.id]
 
-  target_group_arns    = [aws_lb_target_group.nginx_tg.arn]
-  health_check_type    = "ELB"
+  target_group_arns    = [aws_alb_target_group.nginx_tg.arn]
+  health_check_type    = "Ealb"
   desired_capacity     = 2
   min_size             = 1
   max_size             = 4
@@ -37,30 +37,30 @@ resource "aws_autoscaling_group" "nginx_asg" {
 
 
 
-resource "aws_lb" "nginx_lb" {
-  name               = "nginx-lb"
+resource "aws_alb" "nginx_alb" {
+  name               = "nginx-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.nginx-sg.id]
+  security_groups    = [aws_security_group.nginx_alb.id]
   subnets            = [aws_subnet.public_subnet1.id, aws_subnet.public_subnet2.id]
 
   enable_deletion_protection = false
 }
 
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.nginx_lb.arn
+resource "aws_alb_listener" "http" {
+  load_balancer_arn = aws_alb.nginx_alb.arn
   port              = 80
   protocol          = "HTTP"
 
   # By default, return a simple 404 page
   default_action {
     type = "forward"
-    target_group_arn = aws_lb_target_group.nginx_tg.arn
+    target_group_arn = aws_alb_target_group.nginx_tg.arn
   }
 }
 
-resource "aws_security_group" "nginx_lb" {
-  name = "nginx_lb"
+resource "aws_security_group" "nginx_alb" {
+  name = "nginx_alb"
 
   # Allow inbound HTTP requests
   ingress {
@@ -80,7 +80,7 @@ resource "aws_security_group" "nginx_lb" {
 }
 
 
-resource "aws_lb_target_group" "nginx_tg" {
+resource "aws_alb_target_group" "nginx_tg" {
   name     = "nginx-tg"
   port     = 80
   protocol = "HTTP"

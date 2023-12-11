@@ -1,14 +1,14 @@
 resource "aws_security_group" "nginx-sg" {
   name        = "nginx-sg"
   description = "Allow inbound traffic on tcp/80 & SSH 22"
-  vpc_id      = aws_vpc.main.id  # Update the VPC reference
+  vpc_id      = aws_vpc.main.id  # Update the VPC reference to match aws_security_group.nginx_alb
 
   ingress {
-    description     = "Allow 80 from the ALB"
+    description     = "Allow 80 from the Aalb"
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    security_groups = [aws_security_group.nginx_lb.id]  # Update this line
+    security_groups = [aws_security_group.nginx_alb.id]  # Update this line
   }
 
   egress {
