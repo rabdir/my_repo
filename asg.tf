@@ -6,9 +6,9 @@ resource "aws_launch_configuration" "nginx_lc" {
   
   user_data = <<-EOF
               #!/bin/bash
-              yum install -y nginx
-              systemctl enable nginx
-              systemctl start nginx
+              sudo yum install -y nginx
+              sudo systemctl start nginx
+              sudo systemctl enable nginx
               EOF
 
   # Required when using a launch configuration with an auto scaling group.

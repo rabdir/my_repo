@@ -1,5 +1,5 @@
 resource "aws_security_group" "nginx-sg" {
-  name        = "nginx-sg"
+  name        = "nginx-webserver"
   description = "Allow inbound traffic on tcp/80 & SSH 22"
   vpc_id      = aws_vpc.main.id  # Update the VPC reference to match aws_security_group.nginx_alb
 
@@ -20,7 +20,7 @@ resource "aws_security_group" "nginx-sg" {
   }
 
   tags = {
-    Name    = "web_server"
+    Name    = "nginx-webserver"
     Purpose = "Manage inbound traffic"
   }
 }
