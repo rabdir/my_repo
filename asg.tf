@@ -23,7 +23,7 @@ resource "aws_autoscaling_group" "nginx_asg" {
   vpc_zone_identifier  = [aws_subnet.public_subnet1.id, aws_subnet.public_subnet2.id]
 
   target_group_arns    = [aws_alb_target_group.nginx_tg.arn]
-  health_check_type    = "Ealb"
+  health_check_type    = "ELB"
   desired_capacity     = 2
   min_size             = 1
   max_size             = 4
@@ -61,6 +61,7 @@ resource "aws_alb_listener" "http" {
 
 resource "aws_security_group" "nginx_alb" {
   name = "nginx_alb"
+  vpc_id      = aws_vpc.main.id 
 
   # Allow inbound HTTP requests
   ingress {
